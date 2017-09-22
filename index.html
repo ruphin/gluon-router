@@ -1,0 +1,35 @@
+<style>
+  html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  a {
+    font-size: 22px;
+    display: block;
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #606c71;
+  }
+</style>
+
+<a href="/link">/link</a>
+<a href="/link#hash">/link#hash</a>
+<a href="#hash">#hash</a>
+<a href="/link?query=true">/link?query=true</a>
+<a href="http://www.google.com">http://www.google.com</a>
+
+<script type="module">
+  import { onRouteChange } from '/src/gluon-router.js'; onRouteChange((path, query, hash) => { console.log("PATH: ", path);
+  console.log("QUERY: ", query); console.log("HASH: ", hash); });
+</script>
+<!-- build:remove -->
+<span id="browser-sync-binding"></span>
+<!-- endbuild -->
