@@ -107,10 +107,19 @@ const getSameOriginLinkHref = event => {
 };
 
 const notifyRouteChange = () => {
-  const path = window.decodeURIComponent(window.location.pathname);
-  const query = window.location.search.slice(1);
-  const hash = window.decodeURIComponent(window.location.hash.slice(1));
-  routeChangeCallbacks.forEach(callback => callback(path, query, hash));
+  routeChangeCallbacks.forEach(callback => callback(currentPath(), currentQuery(), currentHash()));
+};
+
+export const currentPath = () => {
+  return window.decodeURIComponent(window.location.pathname);
+};
+
+export const currentQuery = () => {
+  return window.location.search.slice(1);
+};
+
+export const currentHash = () => {
+  return window.decodeURIComponent(window.location.hash.slice(1));
 };
 
 // Cache for resolveURL

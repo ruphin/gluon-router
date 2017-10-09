@@ -27,8 +27,11 @@
 <a href="http://www.google.com">http://www.google.com</a>
 
 <script type="module">
-  import { onRouteChange } from '/src/gluon-router.js'; onRouteChange((path, query, hash) => { console.log("PATH: ", path);
+  import { onRouteChange, currentPath, currentQuery, currentHash } from '/src/gluon-router.js'; console.log("PATH: ", currentPath(),
+  " QUERY: ", currentQuery(), " HASH: ", currentHash()); onRouteChange((path, query, hash) => { console.log("PATH: ", path);
   console.log("QUERY: ", query); console.log("HASH: ", hash); });
+
+
 </script>
 <!-- build:remove -->
 <span id="browser-sync-binding"></span>
