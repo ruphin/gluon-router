@@ -2,13 +2,20 @@
   "name": "gluon-router",
   "description": "A minimal router",
   "main": "gluon-router.js",
-  "files": ["gluon-router.js", "gluon-router.js.map"],
+  "files": [
+    "gluon-router.js",
+    "gluon-router.js.map"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ruphin/gluon-router.git"
   },
   "author": "Goffert van Gool <ruphin@ruphin.net>",
-  "keywords": ["web-components", "webcomponents", "router"],
+  "keywords": [
+    "web-components",
+    "webcomponents",
+    "router"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ruphin/gluonjs-router/issues"
@@ -18,5 +25,5 @@
     "dev": "cd dev_modules && yarn install && cd .. && NODE_PATH=$PWD/dev_modules/node_modules gulp serve",
     "publish": "git add gluon-router.js"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
