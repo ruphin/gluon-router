@@ -56,7 +56,7 @@ const getSameOriginLinkHref = event => {
   }
 
   // Find the first link in the event path
-  const eventPath = event.path;
+  const eventPath = event.path || (event.composedPath && event.composedPath());
   let anchor = null;
   for (var i = 0; i < eventPath.length; i++) {
     var element = eventPath[i];
