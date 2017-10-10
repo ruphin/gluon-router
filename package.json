@@ -25,5 +25,5 @@
     "dev": "cd dev_modules && yarn install && cd .. && NODE_PATH=$PWD/dev_modules/node_modules gulp serve",
     "publish": "git add gluon-router.js"
   },
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
