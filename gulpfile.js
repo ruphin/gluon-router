@@ -25,6 +25,8 @@ gulp.task('serve', () => {
     port: 5000,
     notify: false,
     open: false,
+    online: false,
+    ui: false,
     logPrefix: 'APP',
     snippetOptions: {
       rule: {
