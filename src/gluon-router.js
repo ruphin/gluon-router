@@ -1,23 +1,30 @@
-let routingEnabled = false;
+let observingRouteChanges = false;
+let interceptingLinks = false;
 const routeChangeCallbacks = [];
 
+export const interceptLinks = () => {
+  // Enable intercepting clicks on anchor elements
+  if (!interceptingLinks) {
+    document.body.addEventListener('click', globalClickHandler);
+    interceptingLinks = true;
+  }
+}
+
 export const onRouteChange = callback => {
-  if (!routingEnabled) {
-    // Set up listeners for route changes
+  // On first call, set up listeners for route changes
+  if (!observingRouteChanges) {
     window.addEventListener('hashchange', notifyRouteChange);
     window.addEventListener('location-changed', notifyRouteChange);
     window.addEventListener('popstate', notifyRouteChange);
-    document.body.addEventListener('click', globalClickHandler);
-    routingEnabled = true;
+    observingRouteChanges = true;
   }
 
+  // Add the callback to the list
   routeChangeCallbacks.push(callback);
 };
 
 const globalClickHandler = event => {
-  // If another event handler has stopped this event then there's nothing
-  // for us to do. This can happen e.g. when there are multiple
-  // iron-location elements in a page.
+  // Ignore this event if it has already been handled by another service
   if (event.defaultPrevented) {
     return;
   }
@@ -39,6 +46,8 @@ const globalClickHandler = event => {
     return;
   }
 
+  // Add a new navigation state to the browser history, and dispatch an event
+  // to let observers know we changed location
   window.history.pushState({}, '', href);
   window.dispatchEvent(new Event('location-changed'));
 };
@@ -58,13 +67,12 @@ const getSameOriginLinkHref = event => {
   // Find the first link in the event path
   const eventPath = event.path || (event.composedPath && event.composedPath());
   let anchor = null;
-  for (var i = 0; i < eventPath.length; i++) {
-    var element = eventPath[i];
+  eventPath.some((element) => {
     if (element.tagName === 'A' && element.href) {
       anchor = element;
-      break;
+      return true;
     }
-  }
+  })
 
   // If there's no link there's nothing to do.
   if (!anchor) {
