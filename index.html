@@ -24,15 +24,17 @@
 <a href="/link#hash">/link#hash</a>
 <a href="#hash">#hash</a>
 <a href="/link?query=true">/link?query=true</a>
+<a href="/excluded">/excluded</a>
 <a href="http://www.google.com">http://www.google.com</a>
 
 <script type="module">
-  import { onRouteChange, currentPath, currentQuery, currentHash } from '/src/gluon-router.js'; console.log("PATH: ", currentPath(),
-  " QUERY: ", currentQuery(), " HASH: ", currentHash()); onRouteChange((path, query, hash) => { console.log("PATH: ", path);
-  console.log("QUERY: ", query); console.log("HASH: ", hash); });
-
-
+  import { interceptLinks, onRouteChange, currentPath, currentQuery, currentHash } from '/src/gluon-router.js';
+  console.log("PATH: ", currentPath(), " QUERY: ", currentQuery(), " HASH: ", currentHash());
+  onRouteChange((path, query, hash) => {
+    console.log("PATH: ", path);
+    console.log("QUERY: ", query); console.log("HASH: ", hash);
+  });
+  interceptLinks({ exclude: [/\/excluded/] });
 </script>
-<!-- build:remove -->
+
 <span id="browser-sync-binding"></span>
-<!-- endbuild -->

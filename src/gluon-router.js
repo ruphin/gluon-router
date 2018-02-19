@@ -1,14 +1,22 @@
 let observingRouteChanges = false;
 let interceptingLinks = false;
 const routeChangeCallbacks = [];
+const paths = { all: false, included: [], excluded: [] };
 
-export const interceptLinks = () => {
+export const interceptLinks = ({ include = [], exclude = [] } = {}) => {
   // Enable intercepting clicks on anchor elements
   if (!interceptingLinks) {
     document.body.addEventListener('click', globalClickHandler);
     interceptingLinks = true;
   }
-}
+
+  if (include.length === 0) {
+    paths.all = true;
+  } else {
+    Array.prototype.push.apply(paths.included, include);
+  }
+  Array.prototype.push.apply(paths.excluded, exclude);
+};
 
 export const onRouteChange = callback => {
   // On first call, set up listeners for route changes
@@ -32,8 +40,12 @@ const globalClickHandler = event => {
   // Get the href if the target of this click was a link
   const href = getSameOriginLinkHref(event);
 
-  // If no link was clicked, there's nothing to do
-  if (!href) {
+  // If no link was clicked,
+  // or if we have not enabled link interception on all paths
+  // and the link does not match one of the included paths,
+  // or if the link matches one of the explicitly excluded paths,
+  // do nothing.
+  if (!href || (!paths.all && !paths.included.some(path => path.test(href))) || paths.excluded.some(path => path.test(href))) {
     return;
   }
 
@@ -67,12 +79,12 @@ const getSameOriginLinkHref = event => {
   // Find the first link in the event path
   const eventPath = event.path || (event.composedPath && event.composedPath());
   let anchor = null;
-  eventPath.some((element) => {
+  eventPath.some(element => {
     if (element.tagName === 'A' && element.href) {
       anchor = element;
       return true;
     }
-  })
+  });
 
   // If there's no link there's nothing to do.
   if (!anchor) {

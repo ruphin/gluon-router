@@ -1,7 +1,9 @@
-index.html
-pages
-cayman.css
-src
-Dockerfile
-gulpfile.js
 Makefile
+Dockerfile
+src
+test
+index.html
+.prettierignore
+.travis.yml
+browsersync.config.js
+rollup.config.js

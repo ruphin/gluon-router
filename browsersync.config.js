@@ -1,3 +1,5 @@
+historyApiFallback = require('connect-history-api-fallback');
+
 module.exports = {
   port: 5000,
   notify: false,
@@ -13,7 +15,8 @@ module.exports = {
     }
   },
   server: {
-    baseDir: ['examples', '.', 'node_modules']
+    baseDir: ['.', 'node_modules'],
+    middleware: [historyApiFallback()]
   },
-  files: ['*.js', 'src/*.js', 'examples/*.html', 'examples/*.js']
+  files: ['index.html', 'src/*.js']
 };
