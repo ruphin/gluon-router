@@ -44,5 +44,5 @@
     "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-uglify": "^3.0.0"
   },
-  "version": "1.0.0-pre.1"
+  "version": "1.0.0"
 }
