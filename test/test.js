@@ -67,19 +67,20 @@ describe('GluonRouter', () => {
       });
       expect(callbackCalled).to.be.true;
     });
-    // This test is broken due to a bug in Puppeteer
-    // https://github.com/GoogleChrome/puppeteer/issues/865#issuecomment-355674062
-    //
-    // it('should fire callback upon popstate', async () => {
-    //   const callbackCalled = await page.evaluate(async () => {
-    //     called = false;
-    //     window.onRouteChange(() => called = true);
-    //     window.history.pushState({}, 'test', '#test');
-    //     window.history.back();
-    //     return called
-    //   });
-    //   expect(callbackCalled).to.be.true;
-    // });
+    it('should fire callback upon popstate', async () => {
+      await page.evaluate(async () => {
+        window.called = false;
+        window.onRouteChange(() => window.called = true);
+        window.history.pushState({}, 'test', '#test');
+      });
+      expect(await page.url()).to.equal('http://localhost:5000/test/onRouteChange.html#test');
+      await page.goBack()
+      expect(await page.url()).to.equal('http://localhost:5000/test/onRouteChange.html');
+      const callbackCalled = await page.evaluate(async () => {
+        return window.called
+      });
+      expect(callbackCalled).to.be.true;
+    });
   });
 
   describe(`interceptLinks`, () => {
@@ -91,7 +92,6 @@ describe('GluonRouter', () => {
       await page.evaluate(() => {
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.undefined;
       expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
@@ -102,7 +102,6 @@ describe('GluonRouter', () => {
         window.interceptLinks();
         document.getElementById('crossDomainLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.undefined;
       expect(await page.url()).to.equal('http://example.com/');
@@ -113,11 +112,9 @@ describe('GluonRouter', () => {
         window.interceptLinks();
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.true;
-      // page.url() doesn't change because the history API is broken in puppeteer
-      expect(await page.url()).to.equal('http://localhost:5000/test/interceptLinks.html');
+      expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
     });
 
     it('should not intercept links that are exluded', async () => {
@@ -125,7 +122,6 @@ describe('GluonRouter', () => {
         window.interceptLinks({ exclude: [/\/internal\/link/] });
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.undefined;
       expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
@@ -136,7 +132,6 @@ describe('GluonRouter', () => {
         window.interceptLinks({ include: [/\/some\/other\/link/] });
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.undefined;
       expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
@@ -147,7 +142,6 @@ describe('GluonRouter', () => {
         window.interceptLinks({ include: [/\/link/], exclude: [/\/internal\/link/] });
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.undefined;
       expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
@@ -158,10 +152,9 @@ describe('GluonRouter', () => {
         window.interceptLinks({ include: [/\/link/] });
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.true;
-      expect(await page.url()).to.equal('http://localhost:5000/test/interceptLinks.html');
+      expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
     });
 
     it('should intercept links that are included and not excluded', async () => {
@@ -169,10 +162,9 @@ describe('GluonRouter', () => {
         window.interceptLinks({ include: [/\/link/], exclude: [/\/other\/internal\/link/] });
         document.getElementById('internalLink').click();
       });
-      await page.waitFor(10); // Wait for page to start navigating
       await page.waitForSelector('body');
       expect(await page.evaluate(() => window.clicked)).to.be.true;
-      expect(await page.url()).to.equal('http://localhost:5000/test/interceptLinks.html');
+      expect(await page.url()).to.equal('http://localhost:5000/some/internal/link');
     });
   });
 
@@ -190,14 +182,11 @@ describe('GluonRouter', () => {
       let currentPath = await page.evaluate(() => window.currentHash());
       expect(currentPath).to.equal('');
     });
-    // This test is broken due to a bug in Chromium
-    // https://github.com/GoogleChrome/puppeteer/issues/257
-    //
-    // it('should equal the current hash', async () => {
-    //   await page.goto('http://localhost:5000/test/currentHash.html#some-hash');
-    //   let currentPath = await page.evaluate(() => window.currentHash());
-    //   expect(currentPath).to.equal('some-hash');
-    // });
+    it('should equal the current hash', async () => {
+      await page.goto('http://localhost:5000/test/currentHash.html#some-hash');
+      let currentPath = await page.evaluate(() => window.currentHash());
+      expect(currentPath).to.equal('some-hash');
+    });
   });
 
   describe(`currentQuery`, () => {
