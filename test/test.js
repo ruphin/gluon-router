@@ -5,14 +5,20 @@ const browserSync = require('browser-sync').create();
 let browser = null;
 let page = null;
 
-before(async () => {
+before(async function() {
+  // Set a higher timeout to allow puppeteer and browserSync time to start
+  this.timeout(5000);
+
   // Workaround until https://github.com/GoogleChrome/puppeteer/issues/290 is fixed
   browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+
   page = await browser.newPage();
+
   await page.setViewport({
     width: 1024,
     height: 768
   });
+
   await new Promise(resolve =>
     browserSync.init(
       {
@@ -70,14 +76,14 @@ describe('GluonRouter', () => {
     it('should fire callback upon popstate', async () => {
       await page.evaluate(async () => {
         window.called = false;
-        window.onRouteChange(() => window.called = true);
+        window.onRouteChange(() => (window.called = true));
         window.history.pushState({}, 'test', '#test');
       });
       expect(await page.url()).to.equal('http://localhost:5000/test/onRouteChange.html#test');
-      await page.goBack()
+      await page.goBack();
       expect(await page.url()).to.equal('http://localhost:5000/test/onRouteChange.html');
       const callbackCalled = await page.evaluate(async () => {
-        return window.called
+        return window.called;
       });
       expect(callbackCalled).to.be.true;
     });
