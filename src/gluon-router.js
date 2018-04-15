@@ -4,7 +4,7 @@ const routeChangeCallbacks = [];
 const paths = { all: false, included: [], excluded: [] };
 
 // Enable intercepting clicks on anchor elements
-export const interceptLinks = ({ include = [], exclude = [] } = {}) => {
+export const interceptLinks = ({ include = undefined, exclude = [] } = {}) => {
   // On first call, set up global click listener and enable the Event polyfill
   if (!interceptingLinks) {
     document.body.addEventListener('click', globalClickHandler);
@@ -12,14 +12,14 @@ export const interceptLinks = ({ include = [], exclude = [] } = {}) => {
     interceptingLinks = true;
   }
 
-  // If we don't include specific paths, assume that we want to intercept all paths
-  if (include.length === 0) {
+  // If we don't provide an `include` array, assume that we want to intercept all paths
+  if (include === undefined) {
     paths.all = true;
-  }
-
-  // If we are not already intercepting all paths, add the included paths to the list
-  if (!paths.all) {
-    Array.prototype.push.apply(paths.included, include);
+  } else {
+    // If we are not already intercepting all paths, add the included paths to the list
+    if (!paths.all) {
+      Array.prototype.push.apply(paths.included, include);
+    }
   }
 
   Array.prototype.push.apply(paths.excluded, exclude);
