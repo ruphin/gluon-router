@@ -3,18 +3,25 @@ let interceptingLinks = false;
 const routeChangeCallbacks = [];
 const paths = { all: false, included: [], excluded: [] };
 
+// Enable intercepting clicks on anchor elements
 export const interceptLinks = ({ include = [], exclude = [] } = {}) => {
-  // Enable intercepting clicks on anchor elements
+  // On first call, set up global click listener and enable the Event polyfill
   if (!interceptingLinks) {
     document.body.addEventListener('click', globalClickHandler);
+    polyfillEvent();
     interceptingLinks = true;
   }
 
+  // If we don't include specific paths, assume that we want to intercept all paths
   if (include.length === 0) {
     paths.all = true;
-  } else {
+  }
+
+  // If we are not already intercepting all paths, add the included paths to the list
+  if (!paths.all) {
     Array.prototype.push.apply(paths.included, include);
   }
+
   Array.prototype.push.apply(paths.excluded, exclude);
 };
 
@@ -76,10 +83,9 @@ const getSameOriginLinkHref = event => {
     return null;
   }
 
-  // Find the first link in the event path
-  const eventPath = event.path || (event.composedPath && event.composedPath());
   let anchor = null;
-  eventPath.some(element => {
+  // Find the first link in the event path
+  event.composedPath().some(element => {
     if (element.tagName === 'A' && element.href) {
       anchor = element;
       return true;
@@ -178,4 +184,37 @@ export const resolveURL = (path, base) => {
   resolveDoc.base.href = base;
   resolveDoc.anchor.href = path;
   return resolveDoc.anchor;
+};
+
+// This polyfills certain features of Event that are required for the link interception to work
+// It is a no-op on modern browsers
+const polyfillEvent = () => {
+  // Polyfill composedPath() for old browsers (and Edge)
+  // This version excludes `document` and `window` from the path for simplicity
+  if (!Event.prototype.composedPath) {
+    Event.prototype.composedPath = function composedPath() {
+      let element = this.target;
+      if (!element) {
+        return [];
+      }
+
+      const path = [element];
+      while (element.parentElement) {
+        element = element.parentElement;
+        path.push(element);
+      }
+      return path;
+    };
+  }
+
+  // Polyfill Event() constructor for old browsers
+  if (typeof window.Event !== 'function') {
+    const Event = function Event(event, { bubbles = false, cancelable = false } = {}) {
+      const evt = document.createEvent('Event');
+      evt.initEvent(event, bubbles, cancelable);
+      return evt;
+    };
+    Event.prototype = window.Event.prototype;
+    window.Event = Event;
+  }
 };

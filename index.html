@@ -32,9 +32,21 @@
   console.log("PATH: ", currentPath(), " QUERY: ", currentQuery(), " HASH: ", currentHash());
   onRouteChange((path, query, hash) => {
     console.log("PATH: ", path);
-    console.log("QUERY: ", query); console.log("HASH: ", hash);
+    console.log("QUERY: ", query);
+    console.log("HASH: ", hash);
   });
   interceptLinks({ exclude: [/\/excluded/] });
+</script>
+
+<script nomodule src="./gluon-router.es5.js"></script>
+<script nomodule>
+  console.log("PATH: ", GluonRouter.currentPath(), " QUERY: ", GluonRouter.currentQuery(), " HASH: ", GluonRouter.currentHash());
+  GluonRouter.onRouteChange(function (path, query, hash) {
+    console.log("PATH: ", path);
+    console.log("QUERY: ", query);
+    console.log("HASH: ", hash);
+  });
+  GluonRouter.interceptLinks({ exclude: [/\/excluded/] });
 </script>
 
 <span id="browser-sync-binding"></span>
