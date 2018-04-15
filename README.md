@@ -4,23 +4,36 @@
 [![NPM Latest version](https://img.shields.io/npm/v/gluon-router.svg)](https://www.npmjs.com/package/gluon-router)
 [![Code Style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-A simple router exposed as an ES6 module. If enabled, it intercepts browser navigation to same-origin locations, and fires a callback instead. Includes a miniature polyfill for `Event()` constructor and `Event.prototype.composedPath()` for IE11.
+An unopinionated javascript router. If enabled, it intercepts browser navigation to same-origin locations, and exposes a hook to attach callbacks for navigation events. This module implements the bare fundamentals required for frontend navigation, and is not intended to replace a full-featured router.
+
+Includes a miniature polyfill for `Event()` and `Event.prototype.composedPath()` for IE11 and Edge.
 
 ## Compatibility
 
 | Chrome | Safari | Edge | Firefox | IE  |
 | ------ | ------ | ---- | ------- | --- |
-| ✔      | ✔      | ✔    | ✔       | \*  |
+| ✔      | ✔      | ✔\*  | ✔       | ✔\* |
 
-\* Will trigger `Event()` constructor and `Event.prototype.composedPath()` polyfill when link interception is enabled.
+\* Will activate some polyfills when link interception is enabled.
 
-## Usage
+## Example Usage
 
-GluonRouter
+```javascript
+import { interceptLinks, onRouteChange } from '/node_modules/gluon-router/gluon-router.js';
 
-### API
+interceptLinks({
+  include: [/^\/my\//, /^\/application\//, /^\/paths\//],
+  exclude: [/^\/paths\/that\/should\/reload\//]
+});
 
-#### onRouteChange
+onRouteChange((path, query, hash) => {
+  // Implement page navigation here
+});
+```
+
+## API
+
+### onRouteChange
 
 Registers a callback that will be called whenever any browser navigation happens.
 The callback is called with the path, query, and hash components of the new location.
@@ -37,7 +50,7 @@ onRouteChange((path, query, hash) => {
 });
 ```
 
-#### interceptLinks
+### interceptLinks
 
 Enables link interception. After calling this, the browser will no longer reload when the user clicks on a same-domain link. Instead, the new url will be added to the browser navigation history, and any `onRouteChange` callbacks are called.
 
@@ -63,7 +76,7 @@ interceptLinks({
 });
 ```
 
-#### currentPath
+### currentPath
 
 Returns the active path
 
@@ -71,10 +84,10 @@ Returns the active path
 import { currentPath } from '/node_modules/gluon-router/gluon-router.js';
 
 // If the current url is https://example.com/path?query=value#hash
-currentPath() === 'path';
+currentPath() === '/path';
 ```
 
-#### currentQuery
+### currentQuery
 
 Returns the active query component
 
@@ -85,7 +98,7 @@ import { currentQuery } from '/node_modules/gluon-router/gluon-router.js';
 currentQuery() === 'query=value';
 ```
 
-#### currentHash
+### currentHash
 
 Returns the active hash
 
