@@ -2,9 +2,11 @@
   "name": "gluon-router",
   "description": "A minimal router",
   "main": "gluon-router.js",
+  "umd:main": "gluon-router.umd.js",
+  "module": "gluon-router.js",
+  "jsnext:main": "gluon-router.js",
   "files": [
-    "gluon-router.js",
-    "gluon-router.js.map"
+    "gluon-router.*"
   ],
   "repository": {
     "type": "git",
@@ -24,7 +26,6 @@
     "build": "rollup -c",
     "dev": "browser-sync start --config browsersync.config.js",
     "release": "np",
-    "version": "npm run build",
     "test": "mocha"
   },
   "devDependencies": {
