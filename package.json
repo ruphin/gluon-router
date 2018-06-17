@@ -1,5 +1,5 @@
 {
-  "name": "gluon-router",
+  "name": "@gluon/router",
   "description": "A minimal router",
   "main": "gluon-router.js",
   "umd:main": "gluon-router.umd.js",
