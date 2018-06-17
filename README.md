@@ -1,7 +1,7 @@
-# gluon-router
+# Gluon Router
 
 [![Build Status](https://api.travis-ci.org/ruphin/gluon-router.svg?branch=master)](https://travis-ci.org/ruphin/gluon-router)
-[![NPM Latest version](https://img.shields.io/npm/v/gluon-router.svg)](https://www.npmjs.com/package/gluon-router)
+[![NPM Latest version](https://img.shields.io/npm/v/@gluon/router.svg)](https://www.npmjs.com/package/@gluon/router)
 [![Code Style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 An unopinionated javascript router. If enabled, it intercepts browser navigation to same-origin locations, and exposes a hook to attach callbacks for navigation events. This module implements the bare fundamentals required for frontend navigation, and is not intended to replace a full-featured router.
@@ -16,10 +16,14 @@ Includes a miniature polyfill for `Event()` and `Event.prototype.composedPath()`
 
 \* Will activate some polyfills when link interception is enabled.
 
+## Installation
+
+GluonRouter is available through [npm](https://www.npmjs.com/package/@gluon/router) as `@gluon/router`.
+
 ## Example Usage
 
 ```javascript
-import { interceptLinks, onRouteChange } from '/node_modules/gluon-router/gluon-router.js';
+import { interceptLinks, onRouteChange } from '/node_modules/@gluon/router/gluon-router.js';
 
 interceptLinks({
   include: [/^\/my\//, /^\/application\//, /^\/paths\//],
@@ -41,7 +45,7 @@ The callback is called with the path, query, and hash components of the new loca
 You can register as many callbacks as you want.
 
 ```javascript
-import { onRouteChange } from '/node_modules/gluon-router/gluon-router.js';
+import { onRouteChange } from '/node_modules/@gluon/router/gluon-router.js';
 
 onRouteChange((path, query, hash) => {
   console.log('PATH: ', path);
@@ -66,7 +70,7 @@ This function may be called multiple times. Each call beyond the first adds the 
 Note: If the `include` parameter is not defined, all same-domain paths will be intercepted. Pass an empty array `[]` to avoid enabling interception on all same-domain paths.
 
 ```javascript
-import { interceptLinks } from '/node_modules/gluon-router/gluon-router.js';
+import { interceptLinks } from '/node_modules/@gluon/router/gluon-router.js';
 
 // Intercept any links to paths that begin with '/my/', '/application/', or '/paths/'
 // But NOT links to paths that begin with '/paths/that/should/reload/'
@@ -81,7 +85,7 @@ interceptLinks({
 Returns the active path
 
 ```javascript
-import { currentPath } from '/node_modules/gluon-router/gluon-router.js';
+import { currentPath } from '/node_modules/@gluon/router/gluon-router.js';
 
 // If the current url is https://example.com/path?query=value#hash
 currentPath() === '/path';
@@ -92,7 +96,7 @@ currentPath() === '/path';
 Returns the active query component
 
 ```javascript
-import { currentQuery } from '/node_modules/gluon-router/gluon-router.js';
+import { currentQuery } from '/node_modules/@gluon/router/gluon-router.js';
 
 // If the current url is https://example.com/path?query=value#hash
 currentQuery() === 'query=value';
@@ -103,12 +107,12 @@ currentQuery() === 'query=value';
 Returns the active hash
 
 ```javascript
-import { currentHash } from '/node_modules/gluon-router/gluon-router.js';
+import { currentHash } from '/node_modules/@gluon/router/gluon-router.js';
 
 // If the current url is https://example.com/path?query=value#hash
 currentHash() === 'hash';
 ```
 
-# About Gluonjs
+# About Gluon
 
-[Gluonjs](https://gitub.com/ruphin/gluonjs) is a lightweight Web Component library designed for simplicity and speed. It borrows some ideas from [Polymer](https://www.polymer-project.org/), but is mostly based on platform features.
+[Gluon](https://gitub.com/ruphin/gluonjs) is a lightweight Web Component library designed for simplicity and speed. It borrows some ideas from [Polymer](https://www.polymer-project.org/), but is mostly based on platform features.
