@@ -58,13 +58,18 @@ const globalClickHandler = event => {
 
   // Stop the browser from navigating
   event.preventDefault();
+  
+  // Signal the route change event handler and update the address
+  changeRoute(href);
+};
 
+export const changeRoute = (href) => {
   // If the navigation is to the current page we shouldn't add a history
   // entry or fire a change event.
   if (href === window.location.href) {
     return;
   }
-
+  
   // Add a new navigation state to the browser history, and dispatch an event
   // to let observers know we changed location
   window.history.pushState({}, '', href);
