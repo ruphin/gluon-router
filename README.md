@@ -80,6 +80,19 @@ interceptLinks({
 });
 ```
 
+### changeRoute
+
+Updates the browser location and triggers the `onRouteChange` event handler. This can be used to trigger `onRouteChange` event handlers from javascript.
+
+```javascript
+import { changeRoute } from '/node_modules/@gluon/router/gluon-router.js';
+
+// If the current url is https://example.com/path?query=value#hash
+changeRoute('/new_path?query=new_value#new_hash');
+
+window.location === 'https://example.com/new_path?query=new_value#new_hash';
+```
+
 ### currentPath
 
 Returns the active path
