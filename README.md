@@ -126,6 +126,19 @@ import { currentHash } from '/node_modules/@gluon/router/gluon-router.js';
 currentHash() === 'hash';
 ```
 
+## Development
+
+Requires Node.js and npm.
+
+```sh
+npm install
+npm run dev      # start the Vite dev server with the demo page (index.html)
+npm test         # run the Vitest test suite
+npm run build    # build gluon-router.js, gluon-router.umd.js and gluon-router.es5.js
+npm run preview  # preview the built output
+npm run release  # build and publish a new version using np
+```
+
 # About Gluon
 
 [Gluon](https://gitub.com/ruphin/gluonjs) is a lightweight Web Component library designed for simplicity and speed. It borrows some ideas from [Polymer](https://www.polymer-project.org/), but is mostly based on platform features.
