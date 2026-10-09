@@ -1,3 +1,4 @@
 node_modules
 dist
-/gluon-router.*
+*.local
+.DS_Store
